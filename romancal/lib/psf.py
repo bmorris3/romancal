@@ -41,6 +41,7 @@ filter_central_wavelengths = {
     "WFI_Filter_F213_Center": 2.125,
 }
 
+<<<<<<< HEAD
 default_finder = DAOStarFinder(
     # these defaults extracted from the
     # romancal SourceDetectionStep
@@ -53,6 +54,8 @@ default_finder = DAOStarFinder(
     peakmax=1000.0,
 )
 
+=======
+>>>>>>> 59a3a39 (initial implementation of PSF fitting methods)
 
 def create_gridded_psf_model(
     path_prefix,
@@ -284,9 +287,27 @@ def fit_psf_to_image_model(
     if fitter is None:
         fitter = LevMarLSQFitter(calc_uncertainties=True)
 
+<<<<<<< HEAD
     # the iterative PSF method requires a finder:
     psf_photometry_kwargs = {}
     if photometry_cls is IterativePSFPhotometry or (x_init is None and y_init is None):
+=======
+    default_finder = DAOStarFinder(
+        # these defaults extracted from the
+        # romancal SourceDetectionStep
+        fwhm=2.0,
+        threshold=2.0,
+        sharplo=0.0,
+        sharphi=1.0,
+        roundlo=-1.0,
+        roundhi=1.0,
+        peakmax=1000.0,
+    )
+
+    # the iterative PSF method requires a finder:
+    psf_photometry_kwargs = {}
+    if photometry_cls is IterativePSFPhotometry:
+>>>>>>> 59a3a39 (initial implementation of PSF fitting methods)
         if finder is None:
             finder = default_finder
         psf_photometry_kwargs["finder"] = finder
@@ -308,10 +329,14 @@ def fit_psf_to_image_model(
         **psf_photometry_kwargs,
     )
 
+<<<<<<< HEAD
     if x_init is not None and y_init is not None:
         guesses = Table(np.column_stack([x_init, y_init]), names=["x_init", "y_init"])
     else:
         guesses = None
+=======
+    guesses = Table(np.column_stack([x_init, y_init]), names=["x_init", "y_init"])
+>>>>>>> 59a3a39 (initial implementation of PSF fitting methods)
 
     if image_model is None:
         if data is None and error is None:
@@ -338,10 +363,14 @@ def fit_psf_to_image_model(
         # option to enforce a lower limit on the flux uncertainties
         error = np.clip(error, error_lower_limit, None)
 
+<<<<<<< HEAD
     # we also mask non-finite values in the data and error arrays:
     non_finite = ~np.isfinite(data) | ~np.isfinite(error)
 
     if exclude_out_of_bounds and guesses is not None:
+=======
+    if exclude_out_of_bounds:
+>>>>>>> 59a3a39 (initial implementation of PSF fitting methods)
         # don't attempt to fit PSFs for objects with initial centroids
         # outside the detector boundaries:
         init_centroid_in_range = (
@@ -353,9 +382,13 @@ def fit_psf_to_image_model(
         guesses = guesses[init_centroid_in_range]
 
     # fit the model PSF to the data:
+<<<<<<< HEAD
     results_table = photometry(
         data=data, error=error, init_params=guesses, mask=mask | non_finite
     )
+=======
+    results_table = photometry(data=data, error=error, init_params=guesses, mask=mask)
+>>>>>>> 59a3a39 (initial implementation of PSF fitting methods)
 
     # results are stored on the PSFPhotometry instance:
     return results_table, photometry
@@ -383,8 +416,11 @@ def dq_to_boolean_mask(image_model_or_dq, ignore_flags=0, flag_map_name="ROMAN_D
 
     if isinstance(image_model_or_dq, ImageModel):
         dq = image_model_or_dq.dq
+<<<<<<< HEAD
     else:
         dq = image_model_or_dq
+=======
+>>>>>>> 59a3a39 (initial implementation of PSF fitting methods)
 
     # add the Roman DQ flags to the astropy bitmask registry:
     dq_flag_map = dict(roman_dq_flag_map)
@@ -394,4 +430,8 @@ def dq_to_boolean_mask(image_model_or_dq, ignore_flags=0, flag_map_name="ROMAN_D
 
     # convert the bitmask to a boolean mask:
     mask = bitmask.bitfield_to_boolean_mask(dq, ignore_flags=ignore_flags)
+<<<<<<< HEAD
     return mask.astype(bool)
+=======
+    return mask
+>>>>>>> 59a3a39 (initial implementation of PSF fitting methods)

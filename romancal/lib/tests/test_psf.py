@@ -177,3 +177,5 @@ def test_psf_fit(setup_inputs, dx, dy, true_amp, seed=42):
 
     assert np.all(results_table["x_err"] < scale_factor_approx * approx_centroid_err)
     assert np.all(results_table["y_err"] < scale_factor_approx * approx_centroid_err)
+    assert np.all(delta_x < 3)
+    assert np.all(delta_y < 3)
