@@ -90,7 +90,7 @@ def add_synthetic_sources(
         model_data = fit_model(xx, yy) * image_model.data.unit
         model_err = np.sqrt(model_data.value) * model_data.unit
         synth_image[slc_lg] += (
-            np.random.normal(
+            rng.normal(
                 model_data.to_value(image_model.data.unit),
                 model_err.to_value(image_model.data.unit),
                 size=model_data.shape,
@@ -177,5 +177,5 @@ def test_psf_fit(setup_inputs, dx, dy, true_amp, seed=42):
 
     assert np.all(results_table["x_err"] < scale_factor_approx * approx_centroid_err)
     assert np.all(results_table["y_err"] < scale_factor_approx * approx_centroid_err)
-    assert np.all(delta_x < 3)
-    assert np.all(delta_y < 3)
+    assert np.all(delta_x < sigma_threshold)
+    assert np.all(delta_y < sigma_threshold)
